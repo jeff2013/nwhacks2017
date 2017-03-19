@@ -1,7 +1,6 @@
 import cv2
 import pickle
-import face_recognizer
-
+import face_recognizer 
 cap = cv2.VideoCapture(0)
 faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 

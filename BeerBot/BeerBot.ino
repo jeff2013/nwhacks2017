@@ -1,4 +1,3 @@
-#include <Stepper.h>
 #include <stdio.h>
 #define BUTTON_ON 1023
 #define COUNTER_MAX 530
@@ -58,8 +57,8 @@ void loop() {
       toggleMovementPinVal = 0;
       pouring = false;
     }
-    Serial.print("I recieved: ");
-    Serial.println(incomingByte, DEC);
+    //Serial.print("I recieved: ");
+    //Serial.println(incomingByte, DEC);
   }else{
     toggleMovementPinVal = analogRead(toggleMovementPin);
   }
