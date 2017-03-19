@@ -13,12 +13,16 @@ int currentStep = 0;
 int toggleMovementPin = 0;
 int resetPin = 1;
 int toggleMovementPinVal = 0;
+int modePin = 2;
+
+int modeColorPin = 8;
 
 int serialtoggleMovementPinVal = 0;
 
 bool pouringButton = true;
 bool pouringSerial = true; 
 long counter = 0;
+bool mode = true;
 
 //Speed of the pour
 //use 10 for the initial movement, 20 or 30 for the fine pour
@@ -154,6 +158,7 @@ void setup() {
   pinMode(in2Pin, OUTPUT);
   pinMode(in3Pin, OUTPUT);
   pinMode(in4Pin, OUTPUT);
+  pinMode(modeColorPin, OUTPUT);
   digitalWrite(in1Pin, LOW);
   digitalWrite(in2Pin, LOW);
   digitalWrite(in3Pin, LOW);
@@ -167,21 +172,32 @@ void setup() {
 
 void loop() {
     toggleMovementPinVal = analogRead(toggleMovementPin);
-    if(analogRead(toggleMovementPin) == BUTTON_ON || analogRead(resetPin) == BUTTON_ON){ 
+    if(analogRead(modePin)==1023){
+      mode = !mode;
+      counter = 0;
+      delay(150);
+    }
+    
+    if(mode){
+      digitalWrite(modeColorPin, HIGH);
       incomingByte = 0;
-      if(analogRead(resetPin) == BUTTON_ON){
-          pourReverse(true);
-      }
       if(analogRead(toggleMovementPin) == BUTTON_ON){
         pour(true);
       }
-      
+      if(analogRead(resetPin) == BUTTON_ON){ 
+          pourReverse(true);
+      }
     }else{
+      if(analogRead(modePin)==1023){
+      mode = !mode;
+      counter = 0;
+      delay(150);
+    }
+      digitalWrite(modeColorPin, LOW);
+      Serial.println("else");
       if(Serial.available()>0){
           incomingByte = Serial.read();
       }
-        Serial.println("Hello?");
-          Serial.println(incomingByte);
           if(incomingByte == 49){
               //sadface
               serialtoggleMovementPinVal = BUTTON_ON;
@@ -200,7 +216,6 @@ void loop() {
         }else{
             reset(false);
         }
+      }
     }
-  
-}
  
