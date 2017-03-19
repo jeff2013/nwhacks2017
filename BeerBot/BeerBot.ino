@@ -109,6 +109,44 @@ void pour(bool isbutton){
     }
 }
 
+void pourReverse(bool isbutton){
+     int directionStep = (4-1)-currentStep;
+      switch(directionStep){
+        case 0: 
+          digitalWrite(in1Pin, HIGH);
+          digitalWrite(in2Pin, LOW);
+          digitalWrite(in3Pin, LOW);
+          digitalWrite(in4Pin, LOW);
+          break;
+        case 1:
+          digitalWrite(in1Pin, LOW);
+          digitalWrite(in2Pin, HIGH);
+          digitalWrite(in3Pin, LOW);
+          digitalWrite(in4Pin, LOW);
+          break;
+        case 2:
+          digitalWrite(in1Pin, LOW);
+          digitalWrite(in2Pin, LOW);
+          digitalWrite(in3Pin, HIGH);
+          digitalWrite(in4Pin, LOW);
+          break;
+        case 3:
+          digitalWrite(in1Pin, LOW);
+          digitalWrite(in2Pin, LOW);
+          digitalWrite(in3Pin, LOW);
+          digitalWrite(in4Pin, HIGH); 
+          break;
+      }
+      currentStep = (++currentStep<4)? currentStep:0;
+      int pouring = isbutton? pouringButton:pouringSerial;
+      pourSpeed = (counter > 350 && pouring)? 30 : 10;
+      delay(10);
+      counter--;
+
+}
+
+
+
 void setup() {
   
   // put your setup code here, to run once:
@@ -129,14 +167,12 @@ void setup() {
 
 void loop() {
     toggleMovementPinVal = analogRead(toggleMovementPin);
-    if(analogRead(toggleMovementPin) == BUTTON_ON || analogRead(resetPin) == BUTTON_ON || pouringButton == false){ 
+    if(analogRead(toggleMovementPin) == BUTTON_ON || analogRead(resetPin) == BUTTON_ON){ 
       incomingByte = 0;
       if(analogRead(resetPin) == BUTTON_ON){
-          pouringButton = false;
+          pourReverse(true);
       }
-      if(!pouringButton && counter >0){
-        reset(true);  
-      }else{
+      if(analogRead(toggleMovementPin) == BUTTON_ON){
         pour(true);
       }
       
@@ -149,6 +185,7 @@ void loop() {
           if(incomingByte == 49){
               //sadface
               serialtoggleMovementPinVal = BUTTON_ON;
+              toggleMovementPinVal = BUTTON_ON;
               pouringSerial = true;
            }
           if(incomingByte == 50){
@@ -159,7 +196,6 @@ void loop() {
     //Serial.print("I recieved: ");
     //Serial.println(incomingByte, DEC);
         if(serialtoggleMovementPinVal == BUTTON_ON){ 
-            pouringSerial = false;
             pour(false);
         }else{
             reset(false);
