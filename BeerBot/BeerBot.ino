@@ -60,7 +60,6 @@ void loop() {
     //Serial.print("I recieved: ");
     //Serial.println(incomingByte, DEC);
   }else{
-    toggleMovementPinVal = analogRead(toggleMovementPin);
   }
   //!pouring
   //analogRead(resetPin) == 1023
