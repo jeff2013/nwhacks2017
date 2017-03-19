@@ -180,6 +180,7 @@ void loop() {
     
     if(mode){
       digitalWrite(modeColorPin, HIGH);
+      Serial.read();
       incomingByte = 0;
       if(analogRead(toggleMovementPin) == BUTTON_ON){
         pour(true);

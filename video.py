@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import face_recognizer
 import serial
-import ocr
+#import ocr
 import sys
 
 
@@ -29,11 +29,12 @@ while(True):
     if carding:
         cv2.imshow('Video', ocr.threshold(frame))
         if k %256 == 32:
-            ocr.getText(frame)
+            pass
+            #ocr.getText(frame)
     else:
         label, conf, img = face_recognizer.labelFaces(frame)
         if label != None:
-            if (conf < 500):
+            if (conf < 700):
                 ser.write(b"%d" % (label + 1))
             cv2.imshow('Video', img)
         else:

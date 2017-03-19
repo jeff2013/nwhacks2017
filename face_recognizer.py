@@ -32,7 +32,7 @@ def labelFaces(frame):
     cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
     # Do confidence bounding
     labelStr = emotions[label]
-    if(conf > 500):
+    if(conf > 700):
         labelStr = "neutral"
     cv2.putText(
             frame, 
