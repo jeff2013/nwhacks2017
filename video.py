@@ -5,6 +5,11 @@ import serial
 import ocr
 import sys
 
+
+LABEL_NEUTRAL = 0
+LABEL_SAD = 1
+LABEL_HAPPY = 2
+
 if len(sys.argv) != 2:
     print("I need a device file path :(")
     sys.exit()
@@ -26,11 +31,13 @@ while(True):
         if k %256 == 32:
             ocr.getText(frame)
     else:
-        label, img = face_recognizer.labelFaces(frame)
-        if label != 0 and label != None:
-            ser.write(b"%d" % label)
+        label, conf, img = face_recognizer.labelFaces(frame)
+        if label != None:
+            if (conf < 500):
+                ser.write(b"%d" % (label + 1))
             cv2.imshow('Video', img)
         else:
+            ser.write(b"%d" % 2)
             cv2.imshow('Video', frame)
     if k & 0xFF == ord('q'):
         break

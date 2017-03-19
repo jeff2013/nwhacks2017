@@ -3,7 +3,7 @@ import cv2
 import glob
 
 def train():
-    emotions = ["neutral", "sad", "happy"]
+    emotions = ["sad", "happy"]
     emotionClassifier = cv2.face.createFisherFaceRecognizer()
     data = []
     labels = []

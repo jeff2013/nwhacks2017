@@ -1,9 +1,13 @@
 import cv2
 import classifier
 
+LABEL_NEUTRAL = 0
+LABEL_SAD = 1
+LABEL_HAPPY = 2
+
 faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 emotionClassifier = classifier.train()
-emotions = ["neutral", "sad", "happy"]
+emotions = ["sad", "happy"]
 
 def getLargestFaceCoords(grayFrame):
     faces = faceCascade.detectMultiScale(grayFrame)
@@ -19,17 +23,22 @@ def labelFaces(frame):
     label = 0
     (x,y,w,h) = getLargestFaceCoords(gray)
     if(w*h == 0):
-        return None, None
+        return None, None, None
     # Extract the face
     resizedGray = cv2.resize(gray[y:y+h, x:x+w], (350, 350))
     # Draw a rectangle for the face
     label, conf = emotionClassifier.predict(resizedGray)
+    # Do label confidence bounding
     cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
+    # Do confidence bounding
+    labelStr = emotions[label]
+    if(conf > 500):
+        labelStr = "neutral"
     cv2.putText(
             frame, 
-            "label %s, conf %d" % (emotions[label], conf), 
+            "label %s, conf %d" % (labelStr, conf), 
             (x+w +5,y+h//2), 
             cv2.FONT_HERSHEY_PLAIN, 
             1, 
             (0,255,0))
-    return label, frame
+    return label, conf, frame
