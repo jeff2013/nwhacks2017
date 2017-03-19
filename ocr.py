@@ -4,10 +4,7 @@ import numpy as np
 import cv2 
 
 def getText(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
-    # create black and white image
-    thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 11, 2)
+    thresh = threshold(frame)
     print(image_to_string(Image.fromarray(thresh)))
     #channels = cv2.text.computeNMChannels(frame)
     #out = []
@@ -29,10 +26,10 @@ def getText(frame):
     #return out
 def threshold(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    #blur = cv2.GaussianBlur(gray, (5, 5), 0)
     # create black and white image
-    thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 11, 2)
-    return thresh
+    #thresh = cv2.adaptiveThreshold(blur, 255, 1, 1, 11, 2)
+    return gray
 
 
 #print("Loading Image...")

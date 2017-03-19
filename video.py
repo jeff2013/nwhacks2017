@@ -26,10 +26,12 @@ while(True):
         if k %256 == 32:
             ocr.getText(frame)
     else:
-        label, frame = face_recognizer.labelFaces(frame)
-        if label != 0:
+        label, img = face_recognizer.labelFaces(frame)
+        if label != 0 and label != None:
             ser.write(b"%d" % label)
-        cv2.imshow('Video', frame)
+            cv2.imshow('Video', img)
+        else:
+            cv2.imshow('Video', frame)
     if k & 0xFF == ord('q'):
         break
 

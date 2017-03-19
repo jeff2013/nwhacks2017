@@ -17,17 +17,19 @@ def labelFaces(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = faceCascade.detectMultiScale(gray)
     label = 0
-    for(x,y,w,h) in faces:
-        # Extract the face
-        resizedGray = cv2.resize(gray[y:y+h, x:x+w], (350, 350))
-        # Draw a rectangle for the face
-        label, conf = emotionClassifier.predict(resizedGray)
-        cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
-        cv2.putText(
-                frame, 
-                "label %s, conf %d" % (emotions[label], conf), 
-                (x+w +5,y+h//2), 
-                cv2.FONT_HERSHEY_PLAIN, 
-                1, 
-                (0,255,0))
+    (x,y,w,h) = getLargestFaceCoords(gray)
+    if(w*h == 0):
+        return None, None
+    # Extract the face
+    resizedGray = cv2.resize(gray[y:y+h, x:x+w], (350, 350))
+    # Draw a rectangle for the face
+    label, conf = emotionClassifier.predict(resizedGray)
+    cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
+    cv2.putText(
+            frame, 
+            "label %s, conf %d" % (emotions[label], conf), 
+            (x+w +5,y+h//2), 
+            cv2.FONT_HERSHEY_PLAIN, 
+            1, 
+            (0,255,0))
     return label, frame

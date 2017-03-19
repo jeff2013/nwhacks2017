@@ -125,7 +125,9 @@ void setup() {
 
   
   Serial.begin(9600);
-  while(1){
+}
+
+void loop() {
     toggleMovementPinVal = analogRead(toggleMovementPin);
     if(analogRead(toggleMovementPin) == BUTTON_ON || analogRead(resetPin) == BUTTON_ON || pouringButton == false){ 
       if(analogRead(resetPin) == BUTTON_ON){
@@ -139,6 +141,7 @@ void setup() {
       
     }else{
        if(Serial.available() >0){
+        Serial.println("Hello?");
           incomingByte = Serial.read();
           if(incomingByte == 49){
               //sadface
@@ -152,6 +155,8 @@ void setup() {
           }
     //Serial.print("I recieved: ");
     //Serial.println(incomingByte, DEC);
+        }else{
+          Serial.println("No data");
         }
         if(serialtoggleMovementPinVal == BUTTON_ON){ 
             pouringButton = false;
@@ -159,15 +164,7 @@ void setup() {
         }else{
             reset(false);
         }
-      
-        
     }
-
-  }
-}
-
-void loop() {
-  return;
   
 }
  
