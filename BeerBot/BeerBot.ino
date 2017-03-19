@@ -1,5 +1,7 @@
 #include <Stepper.h>
 #include <stdio.h>
+#define BUTTON_ON 1023
+#define COUNTER_MAX 530
 
 int in1Pin = 2;
 int in2Pin = 3;
@@ -40,20 +42,31 @@ void setup() {
 }
 
 void loop() {
-  
   toggleMovementPinVal = analogRead(toggleMovementPin);
-  if(analogRead(resetPin) == 1023){
+  if(analogRead(resetPin) == BUTTON_ON){
     pouring = false;
   }
   if(Serial.available() >0){
     incomingByte = Serial.read();
+    if(incomingByte == 49){
+      //sadface
+      toggleMovementPinVal = BUTTON_ON;
+      pouring = true;
+    }
+    if(incomingByte == 50){
+      //smiling
+      toggleMovementPinVal = 0;
+      pouring = false;
+    }
     Serial.print("I recieved: ");
     Serial.println(incomingByte, DEC);
+  }else{
+    toggleMovementPinVal = analogRead(toggleMovementPin);
   }
   //!pouring
   //analogRead(resetPin) == 1023
   if(!pouring && counter >0){
-    int directionStep = pouring?currentStep:(4-1)-currentStep;
+    int directionStep = (4-1)-currentStep;
     switch(directionStep){
       case 0:
         digitalWrite(in1Pin, HIGH);
@@ -87,8 +100,8 @@ void loop() {
         pouring = true;
       }
   }else{
-    if(toggleMovementPinVal == 1023 && counter < 530){
-     int directionStep = pouring?currentStep:(4-1)-currentStep;
+    if(toggleMovementPinVal == BUTTON_ON && counter < COUNTER_MAX){
+     int directionStep = currentStep;
       switch(directionStep){
         case 0: 
           digitalWrite(in1Pin, HIGH);
